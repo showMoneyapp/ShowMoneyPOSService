@@ -1,8 +1,10 @@
 package model
 
 
-const (
-	Domain_pos_ws = "localhost:7630"
+var (
+	POS_API_Port = ""
+	POS_WS_Port = ""
+	Domain_POS_WS = "localhost:"+ POS_WS_Port
 )
 
 const (

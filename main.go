@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/ShowPay/ShowMoneyPosService/model"
 	"github.com/ShowPay/ShowMoneyPosService/posAPI"
 	"github.com/ShowPay/ShowMoneyPosService/posWS"
 	"github.com/ShowPay/ShowMoneyPosService/util"
@@ -10,7 +11,6 @@ import (
 	"path/filepath"
 )
 
-var pos_ws_port = "1234"
 
 func init() {
 	absFile := filepath.Join("conf", "config.ini")
@@ -18,13 +18,13 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	pos_ws_port = ini.String("pos_ws_port")
+	model.POS_WS_Port = ini.String("pos_ws_port")
 }
 
 func startWS() {
 	http.HandleFunc("/ws", posWS.WsHandler)
 	fmt.Println("Start showPOS-WS-service...")
-	err := http.ListenAndServe(util.AddStr(":", pos_ws_port), nil)
+	err := http.ListenAndServe(util.AddStr(":", model.POS_WS_Port), nil)
 	if err != nil {
 		panic(err)
 	}

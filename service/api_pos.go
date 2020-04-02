@@ -41,7 +41,7 @@ func (sp *Api_showPOS) BroadcastPayment(req *model.ApiPaymentReq, resp *model.Ap
 
 
 
-	u := url.URL{Scheme:"ws", Host:model.Domain_pos_ws, Path:"/ws"}
+	u := url.URL{Scheme:"ws", Host:model.Domain_POS_WS, Path:"/ws"}
 	fmt.Println("connecting to :", u.String())
 
 	c, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
