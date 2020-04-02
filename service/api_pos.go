@@ -13,7 +13,7 @@ import (
 
 type Api_showPOS struct {}
 
-func (sp *Api_showPOS) BroadcastPayment(req *model.ApiPaymentReq, resp *model.ApiPaymentACKResp) error {
+func (sp *Api_showPOS) BroadcastPayment(req *model.ApiPaymentReq, resp *model.ApiPaymentResultResp) error {
 	if req.DeviceId == "" || len(req.DeviceId) == 0 {
 		return errors.New("DeviceId is empty.")
 	}
@@ -30,13 +30,14 @@ func (sp *Api_showPOS) BroadcastPayment(req *model.ApiPaymentReq, resp *model.Ap
 	//广播
 	txId, err := node.NewClientController().BroadcastTx(req.TransactionHex)
 	if err != nil {
-		return errors.New("Broadcast Tx Fail:" + err.Error())
+		resp.Error = "err"
+		resp.Code = 400
+		resp.Transaction = ""
+		return nil
 	}
-	resp.Message = "Broadcast Success"
+	resp.Error = "null"
 	resp.Code = 200
-	resp.Memo = req.Memo
-	resp.TxId = txId
-	resp.Payment = req
+	resp.Transaction = txId
 
 
 
@@ -62,7 +63,7 @@ func (sp *Api_showPOS) BroadcastPayment(req *model.ApiPaymentReq, resp *model.Ap
 		log.Println("write | err :", err)
 		return errors.New("write | err :" + err.Error())
 	}
-	//主动断开
+	//disconnect
 	wsDataDis := &model.WsData{
 		M: model.WS_DISCONNECT,
 		C: 0,

@@ -55,7 +55,7 @@ func NotifyPaymentACKToPos(c net.Conn, wsItemMap *WsItemMap, msg string) {
 		return
 	}
 
-	//获取pos的conn
+	//get POS conn
 	if req.Payment == nil {
 		fmt.Println("Payment is empty.")
 		return

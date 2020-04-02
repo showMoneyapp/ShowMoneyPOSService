@@ -19,7 +19,7 @@ func init() {
 func WsHandler(w http.ResponseWriter, r *http.Request) {
 	conn, _, _, err := ws.UpgradeHTTP(r, w)
 	if err != nil {
-		fmt.Println("showClient connect fail...", err)
+		fmt.Println("showClient connected fail...", err)
 	}
 
 	//localAdd := conn.LocalAddr()
@@ -27,7 +27,7 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println("localAdd：", localAdd.String())
 	fmt.Println("remoteAdd：", remoteAdd.String())
 
-	//check client if is existed
+	//check client if existed
 	if _, ok := wsItemMap.Get(conn); !ok {
 		wsClient := NewWsClient()
 		wsItemMap.Set(conn, wsClient)
@@ -98,7 +98,7 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		Back :{
-			fmt.Println("Jump out the For")
+			fmt.Println("Jump out.")
 		}
 	}()
 }

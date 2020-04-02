@@ -12,7 +12,7 @@ type Ws_showPOS struct {}
 func (sh *Ws_showPOS) MsgToWSPaymentRequest(msg string, req *model.WsPaymentRequestReq) error  {
 	err := json.Unmarshal([]byte(msg), req)
 	if err != nil {
-		return errors.New("Json data parsing failed.")
+		return errors.New("Json data parsed failed.")
 	}
 	return nil
 }
@@ -21,7 +21,7 @@ func (sh *Ws_showPOS) MsgToWSPaymentRequest(msg string, req *model.WsPaymentRequ
 func (sh *Ws_showPOS) MsgToWSPaymentACK(msg string, req *model.WSPaymentACKReq) error  {
 	err := json.Unmarshal([]byte(msg), req)
 	if err != nil {
-		return errors.New("Json data parsing failed.")
+		return errors.New("Json data parsed failed.")
 	}
 	return nil
 }
