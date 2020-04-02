@@ -23,6 +23,7 @@ func StartAPI() {
 	r := mux.NewRouter()
 	r.HandleFunc("/api/v1/pos/broadcastPayment", BroadcastPayment).Methods("POST")
 	fmt.Println("Start showPOS-API-Service...")
+	fmt.Println(util.AddStr("Listen: http://:", model.POS_API_Port))
 	err := http.ListenAndServe(util.AddStr(":", model.POS_API_Port), r)
 	if err != nil {
 		panic(err)

@@ -18,12 +18,13 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	model.POS_WS_Port = ini.String("pos_ws_port")
+	model.POS_WS_Port = ini.String("POS_WS_Port")
 }
 
 func startWS() {
 	http.HandleFunc("/ws", posWS.WsHandler)
 	fmt.Println("Start showPOS-WS-service...")
+	fmt.Println(util.AddStr("Listen: ws://:", model.POS_WS_Port, "/ws"))
 	err := http.ListenAndServe(util.AddStr(":", model.POS_WS_Port), nil)
 	if err != nil {
 		panic(err)
