@@ -23,7 +23,7 @@ func SendHeartBeat(c net.Conn) {
 func GetPaymentRequest(c net.Conn, wsItemMap *WsItemMap, msg string) error {
 	req := &model.WsPaymentRequestReq{}
 	resp := &model.WsResponse{}
-	err := new(impl.Ws_showPos).MsgToWSPaymentRequest(msg, req)
+	err := new(impl.Ws_showPOS).MsgToWSPaymentRequest(msg, req)
 	if err != nil {
 		fmt.Println("MsgToWSPaymentRequest err:", err)
 		return err
@@ -31,7 +31,7 @@ func GetPaymentRequest(c net.Conn, wsItemMap *WsItemMap, msg string) error {
 	//缓存conn
 	wsItemMap.SetConn(req.DeviceId, c)
 
-	err = new(impl.Ws_showPos).GetAndCreatePaymentReq(req, resp)
+	err = new(impl.Ws_showPOS).GetAndCreatePaymentReq(req, resp)
 	if err != nil {
 		fmt.Println("GetAndCreatePaymentReq err:", err)
 		return err
@@ -49,7 +49,7 @@ func GetPaymentRequest(c net.Conn, wsItemMap *WsItemMap, msg string) error {
 //API转发PaymentACK
 func NotifyPaymentACKToPos(c net.Conn, wsItemMap *WsItemMap, msg string) {
 	req := &model.WSPaymentACKReq{}
-	err := new(impl.Ws_showPos).MsgToWSPaymentACK(msg, req)
+	err := new(impl.Ws_showPOS).MsgToWSPaymentACK(msg, req)
 	if err != nil {
 		fmt.Println("MsgToWSPaymentACK err:", err)
 		return
