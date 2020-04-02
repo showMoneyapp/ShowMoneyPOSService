@@ -27,7 +27,7 @@ func (sp *Api_showPOS) BroadcastPayment(req *model.ApiPaymentReq, resp *model.Ap
 		return errors.New("RefundTo is empty.")
 	}
 
-	//广播
+	//broadcast
 	txId, err := node.NewClientController().BroadcastTx(req.TransactionHex)
 	if err != nil {
 		resp.Error = "err"
@@ -48,7 +48,7 @@ func (sp *Api_showPOS) BroadcastPayment(req *model.ApiPaymentReq, resp *model.Ap
 	if err != nil {
 		return errors.New("dial:" + err.Error())
 	}
-	//转发PaymentACK给pos
+	//notify PaymentACK to POS
 	wsData := &model.WsData{
 		M: model.WS_POS_NOTIFY,
 		C: 0,

@@ -56,8 +56,8 @@ func (sh *Ws_showPOS) GetPaymentReq(req *model.WsPaymentRequestReq, resp *model.
 	}
 
 	//**************************************************************************
-	//TODO 暂定有pos机做发送
-	//根据钱包发送服务器地址，转发
+	//TODO Temporarily send by pos machine
+	//Forward based on wallet server url
 	switch req.PaymentUrl {
 	default:
 		break
