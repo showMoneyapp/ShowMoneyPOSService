@@ -9,7 +9,7 @@ import (
 	"net"
 )
 
-//推送消息心跳
+//Push message heartbeat back
 func SendHeartBeat(c net.Conn) {
 	wsData := &model.WsData{
 		M: model.HEART_BEAT,
@@ -19,19 +19,19 @@ func SendHeartBeat(c net.Conn) {
 	SendMsgToConn(c, wsData)
 }
 
-//接收响应保存paymentRequest
+//get paymentRequest from ws
 func GetPaymentRequest(c net.Conn, wsItemMap *WsItemMap, msg string) error {
 	req := &model.WsPaymentRequestReq{}
 	resp := &model.WsResponse{}
-	err := new(impl.Ws_showPOS).MsgToWSPaymentRequest(msg, req)
+	err := new(service.Ws_showPOS).MsgToWSPaymentRequest(msg, req)
 	if err != nil {
 		fmt.Println("MsgToWSPaymentRequest err:", err)
 		return err
 	}
-	//缓存conn
+	//Caching conn
 	wsItemMap.SetConn(req.DeviceId, c)
 
-	err = new(impl.Ws_showPOS).GetAndCreatePaymentReq(req, resp)
+	err = new(service.Ws_showPOS).GetPaymentReq(req, resp)
 	if err != nil {
 		fmt.Println("GetAndCreatePaymentReq err:", err)
 		return err
@@ -46,10 +46,10 @@ func GetPaymentRequest(c net.Conn, wsItemMap *WsItemMap, msg string) error {
 	return nil
 }
 
-//API转发PaymentACK
+//send PaymentACK to POS
 func NotifyPaymentACKToPos(c net.Conn, wsItemMap *WsItemMap, msg string) {
 	req := &model.WSPaymentACKReq{}
-	err := new(impl.Ws_showPOS).MsgToWSPaymentACK(msg, req)
+	err := new(service.Ws_showPOS).MsgToWSPaymentACK(msg, req)
 	if err != nil {
 		fmt.Println("MsgToWSPaymentACK err:", err)
 		return
@@ -57,11 +57,11 @@ func NotifyPaymentACKToPos(c net.Conn, wsItemMap *WsItemMap, msg string) {
 
 	//获取pos的conn
 	if req.Payment == nil {
-		fmt.Println("Payment为空")
+		fmt.Println("Payment is empty.")
 		return
 	}
 	if req.Payment.DeviceId == "" || len(req.Payment.DeviceId) == 0 {
-		fmt.Println("DeviceId为空")
+		fmt.Println("DeviceId is empty.")
 		return
 	}
 	if c, ok := wsItemMap.GetConn(req.Payment.DeviceId); ok {
@@ -76,21 +76,7 @@ func NotifyPaymentACKToPos(c net.Conn, wsItemMap *WsItemMap, msg string) {
 	fmt.Println("pos is not exist | id: [", req.Payment.DeviceId, "]")
 }
 
-
-func SendMsgToConn(c net.Conn, wsData *model.WsData)  {
-	wsDataStr,err := wsData.ToString()
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	err = wsutil.WriteServerMessage(c, ws.OpText, []byte(wsDataStr))
-	if err != nil {
-		// handle error
-		fmt.Println("WriteServerMessage Err:" + err.Error())
-	}
-	return
-}
-
-//WS回复
+//WS Reply
 func SendWSResponseForErr(c net.Conn, wsItemMap *WsItemMap, msg string) {
 	if _, ok := wsItemMap.Get(c); !ok {
 		fmt.Println("conn is not exist")
@@ -105,3 +91,17 @@ func SendWSResponseForErr(c net.Conn, wsItemMap *WsItemMap, msg string) {
 		return
 	}
 }
+
+func SendMsgToConn(c net.Conn, wsData *model.WsData)  {
+	wsDataStr,err := wsData.ToString()
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	err = wsutil.WriteServerMessage(c, ws.OpText, []byte(wsDataStr))
+	if err != nil {
+		// handle error
+		fmt.Println("WriteServerMessage Err:" + err.Error())
+	}
+	return
+}
+

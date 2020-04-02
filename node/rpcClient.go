@@ -105,7 +105,7 @@ func BasicAuth(userName, password string) string {
 
 
 
-//isError 检查是否报错
+//isError: check rejection
 func IsError(result *gjson.Result) error {
 	/*
 		//failed 返回错误

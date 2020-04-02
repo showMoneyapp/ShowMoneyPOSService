@@ -51,18 +51,18 @@ func (i WsItemMap) SetConn(deviceId string, c net.Conn)  {
 	i.WsConns[deviceId] = c
 }
 
-//func (i WsItemMap) Init()  {
-//	i.Lock.Lock()
-//	defer i.Lock.Unlock()
-//	for key,_ := range i.WsItems{
-//		delete(i.WsItems, key)
-//	}
-//}
+func (i WsItemMap) Init()  {
+	i.Lock.Lock()
+	defer i.Lock.Unlock()
+	for key,_ := range i.WsItems{
+		delete(i.WsItems, key)
+	}
+}
 
 func (i WsItemMap) Deleted(c net.Conn)  {
 	i.Lock.Lock()
 	defer i.Lock.Unlock()
-	//delete(i.WsItems, c)
+	delete(i.WsItems, c)
 	for key, v := range i.WsConns {
 		if c == v {
 			delete(i.WsConns, key)

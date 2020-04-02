@@ -1,22 +1,23 @@
 package model
 
 type WsPaymentRequestReq struct {
-	Network             string      `json:"network"`             //比特币网络标识：默认"bitcoin"，测试为"test"
-	Outputs             []*WsOutput `json:"outputs"`             // outputs数组
-	WalletId            string      `json:"walletId"`            //支付方钱包唯一标识
-	DeviceId            string      `json:"deviceId"`            //收款方钱包唯一标识 pos
-	CreationTimestamp   int64       `json:"creationTimestamp"`   //订单生成时间戳
-	ExpirationTimestamp int64       `json:"expirationTimestamp"` //订单期限时间戳
-	Memo                string      `json:"memo"`                //备忘录
-	PaymentUrl          string      `json:"paymentUrl"`          //wallet钱包服务器地址
-	MerchantData        string      `json:"merchantData"`        //商家自定义信息
+	Network             string      `json:"network"`             //string. required. bitcoin network tag：Always set to "bitcoin".
+	Outputs             []*WsOutput `json:"outputs"`             //an array of outputs. required, but can have zero elements.
+	WalletId            string      `json:"walletId"`            //string. required. wallet-device
+	DeviceId            string      `json:"deviceId"`            //string. required. pos-device
+	CreationTimestamp   int64       `json:"creationTimestamp"`   //number. required.
+	ExpirationTimestamp int64       `json:"expirationTimestamp"` //number. optional.
+	Memo                string      `json:"memo"`                //string. optional.
+	PaymentUrl          string      `json:"paymentUrl"`          //string. required.
+	MerchantData        string      `json:"merchantData"`        //string. optional.
+	QRCodeLabelData     string      `json:"qrcodeLabelData"`     //string. optional.
 }
 
 
 type WsOutput struct {
-	Amount      int64  `json:"amount"`      //satoshi
-	Script      string `json:"script"`      //脚本
-	Description string `json:"description"` //描述
-	TokenIndex int64 `json:"tokenIndex"` //Token的公认index
+	Amount      int64  `json:"amount"`      //satoshi. number. required.
+	Script      string `json:"script"`      //string. required. hexadecimal script.
+	Description string `json:"description"` //string. optional. must not have JSON string length of greater than 100.
+	TokenIndex  int64  `json:"tokenIndex"`  //number. token_index. default 0, 0 mean bsv
 }
 

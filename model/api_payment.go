@@ -1,18 +1,16 @@
 package model
 
 type ApiPaymentReq struct {
-	WalletId       string `json:"walletId"`       //钱包标识
-	DeviceId       string `json:"deviceId"`       //Pos标识
-	MerchantData   string `json:"merchantData"`   //商户自定义信息
-	TransactionHex string `json:"transactionHex"` //txHex
-	RefundTo       string `json:"refundTo"`       //退款地址
-	Memo           string `json:"memo"`           //memo
+	WalletId       string `json:"walletId"`       //string. required. wallet-device
+	DeviceId       string `json:"deviceId"`       //string. required. pos-device
+	MerchantData   string `json:"merchantData"`   //string. optional.
+	TransactionHex string `json:"transactionHex"` //a hex-formatted (and fully-signed and valid) transaction. required.
+	RefundTo       string `json:"refundTo"`       //string. paymail to send a refund to. optional.
+	Memo           string `json:"memo"`           //string. optional.
 }
 
-type ApiPaymentACKResp struct {
-	Payment *ApiPaymentReq `json:"payment"`
-	TxId    string         `json:"txId"`
-	Memo    string         `json:"memo"`
-	Code    int64          `json:"code"`
-	Message string         `json:"message"`
+type ApiPaymentResultResp struct {
+	Transaction string `json:"transaction"` //broadcast txId.
+	Code        int    `json:"code"`        //int.
+	Error       string `json:"error"`       //broadcast error message
 }

@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	wsItemMap *WsItemMap //pos端map
+	wsItemMap *WsItemMap //POS-Device Map
 )
 
 func init() {
@@ -19,7 +19,7 @@ func init() {
 func WsHandler(w http.ResponseWriter, r *http.Request) {
 	conn, _, _, err := ws.UpgradeHTTP(r, w)
 	if err != nil {
-		fmt.Println("showClient连接失败...", err)
+		fmt.Println("showClient connect fail...", err)
 	}
 
 	//localAdd := conn.LocalAddr()
@@ -27,7 +27,7 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println("localAdd：", localAdd.String())
 	fmt.Println("remoteAdd：", remoteAdd.String())
 
-	//判断是否已连接该client，有则不用重复加入
+	//check client if is existed
 	if _, ok := wsItemMap.Get(conn); !ok {
 		wsClient := NewWsClient()
 		wsItemMap.Set(conn, wsClient)
@@ -35,10 +35,10 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 
 	go func() {
 		defer func() {
-			//先清除内存再close
+			//clean and close client
 			if _, ok := wsItemMap.Get(conn); ok {
 				wsItemMap.Deleted(conn)
-				fmt.Println("ShowServer-" + remoteAdd.String() + "-主动断开")
+				fmt.Println("ShowServer-" + remoteAdd.String() + "-proactive close")
 			}
 			if err = conn.Close(); err != nil{
 				fmt.Println("ShowClient-" + remoteAdd.String() + "-close err:"  + err.Error())
@@ -47,10 +47,10 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 		for {
 			msg, _, err := wsutil.ReadClientData(conn)
 			if err != nil {
-				//发生err后马上断开
+				//Disconnect immediately if has err
 				if _, ok := wsItemMap.Get(conn); ok {
 					wsItemMap.Deleted(conn)
-					fmt.Println("ShowClient-" + remoteAdd.String() + "-断开：" + err.Error())
+					fmt.Println("ShowClient-" + remoteAdd.String() + "-close：" + err.Error())
 					break
 				}
 			}else {
@@ -58,30 +58,30 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 				wsData := model.WsDataFromStringMsg(string(msg))
 				if wsData == nil {
 					fmt.Println("wsData is nil")
-					SendWSResponseForErr(conn, wsItemMap, "wsData is nil")//返回业务错误信息
+					SendWSResponseForErr(conn, wsItemMap, "wsData is nil")//Return error message
 					continue
 				}
 
 				if wsData.M == "" {
 					fmt.Println("wsData.M is nil")
-					SendWSResponseForErr(conn, wsItemMap, "wsData.M is nil")//返回业务错误信息
+					SendWSResponseForErr(conn, wsItemMap, "wsData.M is nil")//Return error message
 					continue
 				}
 				if wsData.D == "" {
 					fmt.Println("wsData.D is nil")
-					SendWSResponseForErr(conn, wsItemMap, "wsData.D is nil")//返回业务错误信息
+					SendWSResponseForErr(conn, wsItemMap, "wsData.D is nil")//Return error message
 					continue
 				}
 
-				//选择方法
+				//select method
 				switch wsData.M {
-				case model.HEART_BEAT: //返回心跳
+				case model.HEART_BEAT:
 					SendHeartBeat(conn)
 					break
 				case model.WS_PAYMENTREQUEST:
 					err := GetPaymentRequest(conn, wsItemMap, wsData.D.(string))
 					if err != nil {
-						SendWSResponseForErr(conn, wsItemMap, err.Error())//返回业务错误信息
+						SendWSResponseForErr(conn, wsItemMap, err.Error())//Return error message
 						continue
 					}
 					break
@@ -93,12 +93,12 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 					break
 				default:
 					fmt.Println("WsData.M can not find")
-					SendWSResponseForErr(conn, wsItemMap, "WsData.M can not find")//返回业务错误信息
+					SendWSResponseForErr(conn, wsItemMap, "WsData.M can not find")//Return error message
 				}
 			}
 		}
 		Back :{
-			fmt.Println("跳出For")
+			fmt.Println("Jump out the For")
 		}
 	}()
 }

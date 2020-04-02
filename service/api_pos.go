@@ -1,4 +1,4 @@
-package impl
+package service
 
 import (
 	"errors"
@@ -15,16 +15,16 @@ type Api_showPOS struct {}
 
 func (sp *Api_showPOS) BroadcastPayment(req *model.ApiPaymentReq, resp *model.ApiPaymentACKResp) error {
 	if req.DeviceId == "" || len(req.DeviceId) == 0 {
-		return errors.New("DeviceId为空")
+		return errors.New("DeviceId is empty.")
 	}
 	if req.WalletId == "" || len(req.WalletId) == 0 {
-		return errors.New("WalletId为空")
+		return errors.New("WalletId is empty.")
 	}
 	if req.TransactionHex == "" || len(req.TransactionHex) == 0 {
-		return errors.New("TransactionHex为空")
+		return errors.New("TransactionHex is empty.")
 	}
 	if req.RefundTo == "" || len(req.RefundTo) == 0 {
-		return errors.New("RefundTo为空")
+		return errors.New("RefundTo is empty.")
 	}
 
 	//广播
@@ -55,7 +55,7 @@ func (sp *Api_showPOS) BroadcastPayment(req *model.ApiPaymentReq, resp *model.Ap
 	}
 	wsDataStr, err := wsData.ToString()
 	if err != nil {
-		return errors.New("wsData转str失败:" + err.Error())
+		return errors.New("wsData conversion failed:" + err.Error())
 	}
 	err = c.WriteMessage(websocket.TextMessage, []byte(wsDataStr))
 	if err != nil {
@@ -70,7 +70,7 @@ func (sp *Api_showPOS) BroadcastPayment(req *model.ApiPaymentReq, resp *model.Ap
 	}
 	wsDataDisStr, err := wsDataDis.ToString()
 	if err != nil {
-		return errors.New("wsDataDis转str失败:" + err.Error())
+		return errors.New("wsDataDis conversion failed:" + err.Error())
 	}
 	err = c.WriteMessage(websocket.TextMessage, []byte(wsDataDisStr))
 	if err != nil {

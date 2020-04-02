@@ -1,7 +1,7 @@
 package posWS
 
 type WsClient struct {
-	//TODO
+	//TODO do something
 }
 
 func NewWsClient() *WsClient {
