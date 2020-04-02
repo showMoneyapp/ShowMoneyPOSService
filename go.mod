@@ -7,6 +7,7 @@ require (
 	github.com/gobwas/pool v0.2.0 // indirect
 	github.com/gobwas/ws v1.0.3 // indirect
 	github.com/gookit/ini/v2 v2.0.4 // indirect
+	github.com/gorilla/mux v1.7.4 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/imroc/req v0.3.0 // indirect
 	github.com/tidwall/gjson v1.6.0 // indirect

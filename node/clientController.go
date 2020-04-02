@@ -19,7 +19,7 @@ var (
 func NewClientController() *ClientController {
 	// config, err := ini.LoadFiles("testdata/tesdt.ini")
 	// LoadExists will ignore not exists file
-	absFile := filepath.Join("conf", "BSV.ini")
+	absFile := filepath.Join("conf", "config.ini")
 	err := ini.LoadExists(absFile, "not-exist.ini")
 	if err != nil {
 		panic(err)

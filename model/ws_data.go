@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/godaddy-x/jorm/util"
+	"github.com/ShowPay/ShowMoneyPosService/util"
 	"github.com/tidwall/gjson"
 )
 
